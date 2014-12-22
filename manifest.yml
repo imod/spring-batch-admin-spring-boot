@@ -1,0 +1,12 @@
+---
+# deploy app to CloudFoundry
+applications:
+- name: yoo-boot
+  memory: 1G
+  instances: 1
+  domain: cfapps.io
+  path: ./target/spring-batch-admin-spring-boot-1.0.0-RELEASE.jar
+  buildpack: https://github.com/cloudfoundry/java-buildpack
+  services:
+  - mysql
+
