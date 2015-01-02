@@ -15,8 +15,18 @@
  */
 package de.codecentric.batch.config;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.DatabasePopulator;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 /**
  * This is the main configuration class for the application.
@@ -26,5 +36,27 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({ ServletConfiguration.class, WebappConfiguration.class })
 public class MainConfiguration {
+
+	@Value("classpath:schema.sql")
+	private Resource schema;
+
+	@Bean
+	public DataSource dataSource() {
+		return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL).build();
+	}
+
+	@Bean
+	public DataSourceInitializer dataSourceInitializer(final DataSource dataSource) {
+		final DataSourceInitializer initializer = new DataSourceInitializer();
+		initializer.setDataSource(dataSource);
+		initializer.setDatabasePopulator(databasePopulator());
+		return initializer;
+	}
+
+	private DatabasePopulator databasePopulator() {
+		final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+		populator.addScript(schema);
+		return populator;
+	}
 
 }
