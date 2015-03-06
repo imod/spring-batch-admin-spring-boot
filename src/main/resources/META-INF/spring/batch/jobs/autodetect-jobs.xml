@@ -10,5 +10,6 @@
 	<tx:annotation-driven />
 	<context:annotation-config />
 
-	<bean class="de.codecentric.batch.job.BatchConfiguration"></bean>
+	<context:component-scan base-package="de.codecentric.batch.job" />
+
 </beans>

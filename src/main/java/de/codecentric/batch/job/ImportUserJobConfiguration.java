@@ -23,7 +23,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 @EnableBatchProcessing
-public class BatchConfiguration {
+public class ImportUserJobConfiguration {
 
     // tag::readerwriterprocessor[]
     @Bean
