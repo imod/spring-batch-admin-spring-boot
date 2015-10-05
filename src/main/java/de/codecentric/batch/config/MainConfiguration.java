@@ -21,6 +21,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -30,12 +33,21 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 /**
  * This is the main configuration class for the application.
- *
- * @author Thomas Bosch
  */
 @Configuration
 @Import({ ServletConfiguration.class, WebappConfiguration.class })
+@PropertySources(value = { @PropertySource(value = "classpath:myprops.properties") })
 public class MainConfiguration {
+
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+		return new PropertySourcesPlaceholderConfigurer();
+	}
+
+	// key is available in "myprops.properties" and "application.properties"
+	// but it still does not work
+	@Value("${my.apiKey}")
+	private String myApiKey;
 
 	@Value("classpath:schema.sql")
 	private Resource schema;
